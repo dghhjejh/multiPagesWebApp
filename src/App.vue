@@ -4,20 +4,23 @@
     <header>
       <NavBar/>
     </header>
+    <body>
+      <div class="mise_en_page">
+        <h1 class="texte">Selection: {{ unPays }}</h1>
+        <BarreDeRechercheDropDown :source="pays" v-model="unPays"/>
+      </div>
+    </body>
   </div>
 </template>
 
-<script>
-/* eslint-disable */
-import NavBar from "./components/NavBar"
-export default {
-  name: 'App',
-  components: {
-    NavBar
-  }
-}
-</script>
+<script setup>
+import { ref } from 'vue';
+import NavBar from './components/NavBar';
+import BarreDeRechercheDropDown from './components/BarreDeRechercheDropDown';
+import pays from './pays/pays.json';
 
+const unPays = ref('');
+</script>
 <style>
 *{
   margin: 0;
@@ -25,11 +28,25 @@ export default {
   box-sizing:border-box;
 }
 body{
-  font-family: 'montserrat', sans-serif;
+  width: 100vw;
+  height: 100vh;
+  background-color: #edf2f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 header{
   width: 100vw;
   background-color: #222;
   padding: 15px;
+}
+.mise_en_page{
+  width: calc(100% / 2);
+}
+.texte{
+  text-align: center;
+  font-weight: bold;
+  justify-content: space-between;
 }
 </style>
