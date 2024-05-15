@@ -1,7 +1,7 @@
 
 <template>
     <div class="barre_de_recherche">
-        <input type="text" :value="modelValue" @input="handleInput" class="entree"/>
+        <input type="text" placeholder="nom du pays" :value="modelValue" @input="handleInput" class="entree"/>
         <ul class="options" v-show="resultatsDeRecherche.length && isOpen">
             <li class="uneOption" v-for="resultat in resultatsDeRecherche" :key="resultat.nom" @click="setSelected(resultat.nom)">
                 {{ resultat.nom }}

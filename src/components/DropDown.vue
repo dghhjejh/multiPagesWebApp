@@ -1,6 +1,6 @@
 
 <template>
-   <div class="menu-item" @click="isOpen = !isOpen">
+   <div class="menu-item" @click="toggleDropdown">
     <a href="#">
         {{ title }}
     </a>
@@ -22,6 +22,16 @@
     data(){
         return{
             isOpen:false
+        }
+    },
+    methods: {
+        toggleDropdown() {
+            this.isOpen = !this.isOpen;
+            if (this.isOpen) {
+                setTimeout(() => {
+                    this.isOpen = false;
+                }, 10000);
+            }
         }
     }
   }
