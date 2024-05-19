@@ -1,4 +1,3 @@
-
 <template>
   <div id="app">
     <header>
@@ -10,21 +9,18 @@
         <BarreDeRechercheDropDown :source="pays" v-model="unPays"/>
       </div>
     </div>
+    <div>
+      <TypeMessage :message="''" :erreur="''" :success="''"/>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import {Flip, toast} from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
 import NavBar from './components/NavBar';
 import BarreDeRechercheDropDown from './components/BarreDeRechercheDropDown';
+import TypeMessage from './components/TypeMessage';
 import pays from './pays/pays.json';
-toast("Bienvenue sur ma page!", {
-  "theme": "light",
-  autoClose: 1000,
-  transition: Flip,
-})
 const unPays = ref('');
 </script>
 <style>
