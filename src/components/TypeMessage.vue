@@ -2,9 +2,9 @@
   <v-container>
     <v-card>
       <v-card-actions>
-        <v-btn color="info" @click="afficherMessage">{{ message }}</v-btn>
-        <v-btn color="error" @click="afficherErreur">{{ erreur }}</v-btn>
-        <v-btn color="success" @click="afficherSuccess">{{ success }}</v-btn>
+        <v-btn color="info" @click="afficherMessage">message</v-btn>
+        <v-btn color="error" @click="afficherErreur">erreur</v-btn>
+        <v-btn color="success" @click="afficherSuccess">success</v-btn>
       </v-card-actions>
     </v-card>
     <div class="toast-container">
@@ -14,7 +14,6 @@
     </div>
   </v-container>
   </template>
-  
   <script setup>
   /* eslint-disable */
   import {defineProps, ref} from 'vue';
