@@ -8,9 +8,9 @@
       </v-card-actions>
     </v-card>
     <div class="toast-container">
-        <div v-if="isMessageOpen" class="toast info">{{ message }}</div>
-        <div v-if="isErrorOpen" class="toast error">{{ erreur }}</div>
-        <div v-if="isSuccessOpen" class="toast success">{{ success }}</div>
+        <div v-if="isMessageOpen && (!isErrorOpen && !isSuccessOpen)" class="toast info">{{ message }}</div>
+        <div v-if="isErrorOpen && (!isMessageOpen && !isSuccessOpen)" class="toast error">{{ erreur }}</div>
+        <div v-if="isSuccessOpen && (!isErrorOpen && !isMessageOpen)" class="toast success">{{ success }}</div>
     </div>
   </v-container>
   </template>
@@ -34,12 +34,12 @@
   const isMessageOpen = ref(false);
   const message = ref('message');
   const afficherMessage = () =>{
-    isMessageOpen.value = true;
     message.value = "ceci est un simple message";
+    isMessageOpen.value = true;
     setTimeout(()=>{
         message.value = "message";
         isMessageOpen.value = false;
-    }, 1000);
+    }, 3000);
   };
   const erreur = ref('erreur');
   const isErrorOpen = ref(false);
@@ -49,7 +49,7 @@
     setTimeout(()=>{
         erreur.value = "erreur";
         isErrorOpen.value = false;
-    }, 1000);
+    }, 3000);
   };
   const success = ref('success');
   const isSuccessOpen = ref(false);
@@ -59,7 +59,7 @@
     setTimeout(()=>{
         success.value = "success";
         isSuccessOpen.value = false;
-    }, 1000);
+    }, 3000);
   };
   </script>
   
