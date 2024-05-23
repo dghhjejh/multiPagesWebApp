@@ -3,8 +3,8 @@
     <div class="barre_de_recherche">
         <input type="text" placeholder="nom du pays" :value="modelValue" @input="handleInput" class="entree"/>
         <ul class="options" v-show="resultatsDeRecherche.length && isOpen">
-            <li class="uneOption" v-for="resultat in resultatsDeRecherche" :key="resultat.nom" @click="setSelected(resultat.nom)">
-                {{ resultat.nom }}
+            <li class="uneOption" v-for="resultat in resultatsDeRecherche" :key="resultat" @click="setSelected(resultat)">
+                {{ resultat}}
             </li>
         </ul>
     </div>
@@ -33,7 +33,7 @@ const resultatsDeRecherche = computed(()=>{
     }
 
     return props.source.filter(item=>{
-        if(item.nom.toLowerCase().includes(recherche.value.toLowerCase())){
+        if(item.toLowerCase().includes(recherche.value.toLowerCase())){
             return item
         }
     })

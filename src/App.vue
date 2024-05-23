@@ -16,12 +16,27 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted} from 'vue';
 import NavBar from './components/NavBar';
 import BarreDeRechercheDropDown from './components/BarreDeRechercheDropDown';
 import TypeMessage from './components/TypeMessage';
-import pays from './pays/pays.json';
+import axios from 'axios';
 const unPays = ref('');
+const pays = ref([]);
+const status = ref(true);
+const erreur = ref(null);
+onMounted(async() =>{
+    try{
+        const reponse = await axios.get('https://restcountries.com/v3.1/all?fields=translations');
+        pays.value = reponse.data.map(lePays => lePays.translations.fra.common);
+    }
+    catch(err){
+        erreur.value = 'une erreur est survenue: '+err.message;
+    }
+    finally{
+        status.value = false;
+    }
+})
 </script>
 <style>
 *{
