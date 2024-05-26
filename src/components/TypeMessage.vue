@@ -1,22 +1,13 @@
 <template>
-  <v-container>
-    <v-card>
-      <v-card-actions>
-        <v-btn color="info" @click="afficherMessage">message</v-btn>
-        <v-btn color="error" @click="afficherErreur">erreur</v-btn>
-        <v-btn color="success" @click="afficherSuccess">success</v-btn>
-      </v-card-actions>
-    </v-card>
     <div class="toast-container">
         <div v-if="isMessageOpen && (!isErrorOpen && !isSuccessOpen)" class="toast info">{{ message }}</div>
         <div v-if="isErrorOpen && (!isMessageOpen && !isSuccessOpen)" class="toast error">{{ erreur }}</div>
         <div v-if="isSuccessOpen && (!isErrorOpen && !isMessageOpen)" class="toast success">{{ success }}</div>
     </div>
-  </v-container>
   </template>
   <script setup>
   /* eslint-disable */
-  import {defineProps, ref} from 'vue';
+  import {ref, defineProps, defineExpose} from 'vue';
   const propsTypeMessage = defineProps({
     message:{
         type: String,
@@ -44,7 +35,7 @@
   const erreur = ref('erreur');
   const isErrorOpen = ref(false);
   const afficherErreur = () =>{
-    erreur.value = "ceci est un message d'erreur";
+    erreur.value = "ce pays n'existe pas";
     isErrorOpen.value = true;
     setTimeout(()=>{
         erreur.value = "erreur";
@@ -61,9 +52,9 @@
         isSuccessOpen.value = false;
     }, 3000);
   };
-  </script>
-  
-  <style>
+  defineExpose({afficherErreur, afficherMessage, afficherSuccess});
+</script>
+<style>
 .toast-container {
   position: fixed;
   top: 10px;

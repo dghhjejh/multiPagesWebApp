@@ -1,7 +1,8 @@
 
 <template>
     <div class="barre_de_recherche">
-        <input type="text" placeholder="nom du pays" :value="modelValue" @input="handleInput" class="entree"/>
+        <input type="text" placeholder="nom du pays" :value="modelValue" @input="handleInput" class="entree" @keypress="onEnter"/>
+        <TypeMessage ref="typeMessage"/>
         <ul class="options" v-show="resultatsDeRecherche.length && isOpen">
             <li class="uneOption" v-for="resultat in resultatsDeRecherche" :key="resultat" @click="setSelected(resultat)">
                 {{ resultat}}
@@ -13,6 +14,7 @@
  <script setup>
 /* eslint-disable */
 import {computed, ref} from 'vue';
+import TypeMessage from './TypeMessage.vue';
 const props = defineProps({
     source:{
         type: Array,
@@ -38,7 +40,15 @@ const resultatsDeRecherche = computed(()=>{
         }
     })
 })
-
+const typeMessage = ref(null);
+const onEnter = event => {
+  if (event.key === "Enter") {
+    const filteredItems = props.source.filter(item => item.toLowerCase().includes(recherche.value.toLowerCase()));
+    if (!filteredItems.length > 0) {
+      typeMessage.value.afficherErreur();
+    }
+  }
+};
 const isOpen = ref(false)
 
 const setSelected = item => {
