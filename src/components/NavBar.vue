@@ -2,14 +2,14 @@
 <template>
     <nav>
         <div class="menu-item">
-            <a href="#">Home</a>
+            <router-link to="/">Home</router-link>
         </div>
         <div class="menu-item">
-            <a href="#">About</a>
+            <router-link to="/AboutSite">About</router-link>
         </div>
         <DropDown title="Services" :items="services"/>
         <div class="menu-item">
-            <a href="#">Contact</a>
+            <router-link to="/CardGrids">CardGrids</router-link>
         </div>
     </nav>
 </template>
