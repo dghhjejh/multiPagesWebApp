@@ -6,19 +6,30 @@
             <v-card-title>
               <v-text-field v-model="nouvelleTache" label="Titre de la tâche"></v-text-field>
               <v-text-field v-model="description" label="Description"></v-text-field>
-              <v-text-field v-model="selectedDate" label="Sélectionner une date" outlined prepend-icon="mdi-calendar" @click:append="afficherCalendrier" readonly></v-text-field>
               <v-menu
-              v-model="showDatePicker"
-              :close-on-content-click="false"
-              transition="scale-transition"
-              min-width="auto"
-              offset-y
+                v-model="showDatePicker"
+                transition="scale-transition"
+                min-width="auto"
+                offset-y
               >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    :value="selectedDate.toISOString().substring(0, 10)"
+                    v-model="showDatePicker"
+                    v-bind="attrs"
+                    v-on="on"
+                    outlined
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    label="Sélectionner une date"
+                    @click:prepend="afficherCalendrier"
+                  ></v-text-field>
+                </template>
                 <v-date-picker
-                 v-model="selectedDate"
-                @input="showDatePicker = false"
-                >
-                </v-date-picker>
+                  v-model="selectedDate"
+                  @input="showDatePicker = false"
+                  no-title
+                ></v-date-picker>
               </v-menu>
             </v-card-title>
             <v-card-actions>
@@ -53,30 +64,28 @@
   <script setup>
   import { ref } from 'vue';
   
-  const getLocalDateString = () => {
-    const date = new Date();
-    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-    return date.toISOString().substring(0, 10);
-  };
   const showDatePicker = ref(false);
   const nouvelleTache = ref('');
   const description = ref('');
   const taches = ref([]);
-  const selectedDate = ref(getLocalDateString());
+  const selectedDate = ref(new Date());
+  
   const ajouterTache = () => {
     if (nouvelleTache.value.trim() !== '') {
       taches.value.push({
         tache: nouvelleTache.value,
-        date: selectedDate.value,
+        date: selectedDate.value.toISOString().substring(0, 10), // Format to string
         description: description.value
       });
       nouvelleTache.value = '';
       description.value = ''; 
     }
   };
+  
   const afficherCalendrier = () => {
     showDatePicker.value = true;
-  } 
+  };
+  
   const supprimerTache = (indice) => {
     taches.value.splice(indice, 1);
   };
@@ -86,11 +95,15 @@
   .leconteneur {
     position: relative;
     top: 110px;
-    z-index: 9999;
+    z-index: 1;
   }
   
   .mx-auto {
     margin-left: auto;
     margin-right: auto;
+  }
+  
+  .v-menu__content {
+    z-index: 3000 !important;
   }
   </style>
