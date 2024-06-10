@@ -1,7 +1,4 @@
 <template>
-<header>
-    <NavBar/>
-</header>
 <div class="tout_concerne_barre_de_recherche">
       <div class="mise_en_page">
         <h1 class="texte">Selection: {{ unPays }}</h1>
@@ -24,7 +21,6 @@
 
 <script setup>
 import { ref, onMounted} from 'vue';
-import NavBar from './NavBar';
 import BarreDeRechercheDropDown from './BarreDeRechercheDropDown';
 import TypeMessage from './TypeMessage';
 import axios from 'axios';

@@ -1,15 +1,16 @@
 <template>
   <div id="app">
+    <header>
+      <NavBar/>
+    </header>
     <router-view/>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'App'
-}
-</script>
+<script setup>
+import NavBar from './components/NavBar.vue';
 
+</script>
 <style>
 nav {
   padding: 15px;
