@@ -4,7 +4,7 @@
         <v-col cols="12" md="6" class="mx-auto">
           <v-card class="mb-4">
             <v-card-title>
-              <v-text-field v-model="nouvelleTache" label="Titre de la tâche"></v-text-field>
+              <v-text-field v-model="titre" label="Titre de la tâche"></v-text-field>
               <v-text-field v-model="description" label="Description"></v-text-field>
               <v-menu
                 v-model="showDatePicker"
@@ -33,7 +33,7 @@
               </v-menu>
             </v-card-title>
             <v-card-actions>
-              <v-btn icon @click="ajouterTache">
+              <v-btn icon @click="postData">
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </v-card-actions>
@@ -47,11 +47,11 @@
             class="mb-4"
           >
             <v-card-title>
-              <div>Titre: {{ item.tache }}</div>
+              <div>Titre: {{ item.titre }}</div>
               <div>Description: {{ item.description }}</div>
               <div>Date: {{ item.date }}</div>
               <v-spacer></v-spacer>
-              <v-btn icon @click="supprimerTache(indice)">
+              <v-btn icon @click="deleteData(indice)">
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </v-card-title>
@@ -62,33 +62,73 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue';
-  
+  import { ref, onMounted } from 'vue';
+  import axios from 'axios';
+
   const showDatePicker = ref(false);
-  const nouvelleTache = ref('');
+  const titre = ref('');
   const description = ref('');
   const taches = ref([]);
   const selectedDate = ref(new Date());
-  
-  const ajouterTache = () => {
-    if (nouvelleTache.value.trim() !== '') {
-      taches.value.push({
-        tache: nouvelleTache.value,
-        date: selectedDate.value.toISOString().substring(0, 10), // Format to string
-        description: description.value
-      });
-      nouvelleTache.value = '';
-      description.value = ''; 
-    }
-  };
-  
+  const statusGet= ref(true);
+  const statusPost = ref(true);
+  const statusDelete = ref(true);
+  const erreur = ref(null);
   const afficherCalendrier = () => {
     showDatePicker.value = true;
   };
   
-  const supprimerTache = (indice) => {
-    taches.value.splice(indice, 1);
-  };
+const getData = async() => {
+  try{
+        const response = await axios.get('http://127.0.0.1:8000/Taches');
+        taches.value = response.data;
+    }
+    catch(err){
+        erreur.value = 'une erreur est survenue: '+err.message;
+    }
+    finally{
+        statusGet.value = false;
+    }
+}
+  onMounted(async() =>{
+    getData();
+});
+
+const postData = async() =>{
+  if(titre.value.trim() !== ''){
+    try{
+      const dataSent = {
+          titre: titre.value,
+          date: selectedDate.value.toISOString().substring(0, 10),
+          description: description.value};
+      const response = await axios.post("http://127.0.0.1:8000/Taches/", dataSent);
+      console.log(response.data)
+      getData();
+  }
+    catch(err){
+      erreur.value = 'une erreur est survenue: '+err.message;
+   }
+   finally{
+      statusPost.value = false;
+   }
+  }
+}
+
+const deleteData = async(index) => {
+    try{
+      getData();
+      const response = await axios.delete(`http://127.0.0.1:8000/Taches/${index}`);
+      console.log(response.data);
+      getData();
+      }
+    catch(err){
+        erreur.value = 'une erreur est survenue: '+err.message;
+    }
+      finally{
+          statusDelete.value = false;
+      }
+
+}
   </script>
   
   <style scoped>
