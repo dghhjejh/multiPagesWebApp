@@ -51,7 +51,7 @@
               <div>Description: {{ item.description }}</div>
               <div>Date: {{ item.date }}</div>
               <v-spacer></v-spacer>
-              <v-btn icon @click="deleteData(indice)">
+              <v-btn icon @click="deleteData(item.id)">
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </v-card-title>
@@ -95,15 +95,17 @@ const getData = async() => {
 });
 
 const postData = async() =>{
+  await getData();
   if(titre.value.trim() !== ''){
     try{
       const dataSent = {
-          titre: titre.value,
-          date: selectedDate.value.toISOString().substring(0, 10),
-          description: description.value};
+        titre: titre.value,
+        date: selectedDate.value.toISOString().substring(0, 10),
+        description: description.value
+      };
       const response = await axios.post("http://127.0.0.1:8000/Taches/", dataSent);
       console.log(response.data)
-      getData();
+      await getData();
   }
     catch(err){
       erreur.value = 'une erreur est survenue: '+err.message;
@@ -116,10 +118,10 @@ const postData = async() =>{
 
 const deleteData = async(index) => {
     try{
-      getData();
+      await getData();
       const response = await axios.delete(`http://127.0.0.1:8000/Taches/${index}`);
       console.log(response.data);
-      getData();
+      await getData();
       }
     catch(err){
         erreur.value = 'une erreur est survenue: '+err.message;
