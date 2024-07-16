@@ -106,6 +106,8 @@ const postData = async() =>{
       const response = await axios.post("http://127.0.0.1:8000/Taches/", dataSent);
       console.log(response.data)
       await getData();
+      titre.value = "";
+      description.value = "";
   }
     catch(err){
       erreur.value = 'une erreur est survenue: '+err.message;
@@ -115,7 +117,6 @@ const postData = async() =>{
    }
   }
 }
-
 const deleteData = async(index) => {
     try{
       await getData();
