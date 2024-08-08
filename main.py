@@ -1,11 +1,19 @@
 from typing import Union
 from typing import Optional
+from typing import List
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import datetime
+from bson.objectid import ObjectId
+from pymongo import MongoClient
 from fastapi.middleware.cors import CORSMiddleware
 import uuid
+
 app = FastAPI()
+# MongoDB connection
+client = MongoClient("mongodb://localhost:27017/")
+db = client.to_do_list_app_database
+collection = db.thing_to_do
 
 origins = [
     "http://localhost.tiangolo.com",
@@ -23,7 +31,7 @@ app.add_middleware(
 )
 
 class Taches(BaseModel):
-    id: str
+    id: str|None=None
     titre: str
     date: datetime.date
     description: str|None = None
@@ -34,31 +42,35 @@ allTasks: list[Taches] = []
 def read_root():
     return {"Hello": "World"}
 
-@app.get("/Taches", response_model=list[Taches])
-def read_tache():
+@app.get("/Taches", response_model=List[Taches])
+async def read_task():
+    allTasks = list(collection.find())
+    for task in allTasks:
+        task["id"] = str(task["_id"])
+        task["_id"] = str(task["_id"])
     return allTasks
 
-@app.put("/Taches")
-def update_tache(tache : Taches):
-    for task in allTasks:
-        if task.id == tache.id:
-            task.titre = tache.titre
-            task["date"] = tache.date
-            task["description"] = tache.description
-            return "task updated smoothly"
-    raise HTTPException(status_code=404, detail="Task not found")
-
 @app.post("/Taches", response_model=Taches)
-def create_tache(tache: dict):
-    new_task = Taches(id=str(uuid.uuid4()), titre=tache["titre"], date=tache["date"], description=tache["description"])
-    allTasks.append(new_task)
-    return new_task
+async def create_tache(task: dict):
+    result = collection.insert_one(task)
+    if not result.acknowledged:
+        raise HTTPException(status_code=500, detail="Could not create task")
+    return task
 
 @app.delete("/Taches/{indice}", response_model=dict)
-def delete_tache(indice: str):
-    for  task in allTasks:
-        if task.id == indice:
-            allTasks.remove(task)
-            return {"message":"task removed correctly"}
-    raise HTTPException(status_code=404, detail= "Task not found")
+async def delete_task(indice: str):
+    try:
+        to_delete_object_id = ObjectId(indice)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="Invalid task ID")
 
+    result = collection.delete_one({"_id": to_delete_object_id})
+
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    return {"detail": "Task deleted successfully"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8000)
