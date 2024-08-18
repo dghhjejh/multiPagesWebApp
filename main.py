@@ -11,7 +11,7 @@ import uuid
 
 app = FastAPI()
 # MongoDB connection
-client = MongoClient("mongodb://localhost:27017/")
+client = MongoClient("mongodb+srv://emma:weJ9rynf0qLDcvuh@fistmultipagessiteclust.dg0jk.mongodb.net/?retryWrites=true&w=majority&appName=FistMultipagesSiteCluster")
 db = client.to_do_list_app_database
 collection = db.thing_to_do
 
@@ -37,7 +37,6 @@ class Taches(BaseModel):
     description: str|None = None
 
 allTasks: list[Taches] = []
-
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
@@ -46,8 +45,8 @@ def read_root():
 async def read_task():
     allTasks = list(collection.find())
     for task in allTasks:
-        task["id"] = str(task["_id"])
         task["_id"] = str(task["_id"])
+        task["id"] = str(task["_id"])
     return allTasks
 
 @app.post("/Taches", response_model=Taches)
