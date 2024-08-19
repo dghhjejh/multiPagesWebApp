@@ -76,6 +76,8 @@ const statusPost = ref(true);
 const statusDelete = ref(true);
 const erreur = ref(null);
 
+axios.defaults.baseURL = process.env.VUE_APP_API_URL;
+
 const afficherCalendrier = () => {
   showDatePicker.value = true;
 };
@@ -86,7 +88,7 @@ const formattedDate = computed(() => {
 
 const getData = async() => {
 try{
-      const response = await axios.get('http://127.0.0.1:8000/Taches');
+      const response = await axios.get('/Taches');
       console.log(response.data)
       taches.value = response.data;
   }
@@ -110,7 +112,7 @@ if(titre.value.trim() !== ''){
       date: moment(selectedDate.value).tz('America/Toronto').format('YYYY-MM-DD'),
       description: description.value
     };
-    const response = await axios.post("http://127.0.0.1:8000/Taches/", dataSent);
+    const response = await axios.post("/Taches/", dataSent);
     console.log(response.data)
     await getData();
     titre.value = "";
@@ -127,7 +129,7 @@ if(titre.value.trim() !== ''){
 const deleteData = async(index) => {
   try{
     await getData();
-    const response = await axios.delete(`http://127.0.0.1:8000/Taches/${index}`);
+    const response = await axios.delete(`/Taches/${index}`);
     console.log(response.data);
     await getData();
   }
