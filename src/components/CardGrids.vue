@@ -39,7 +39,7 @@
           </v-card-actions>
         </v-card>
       </v-col>
-
+      <LoadingSpinner v-if="isLoading"/>
       <v-col cols="12" md="6" class="mx-auto">
         <v-card
           v-for="item in taches"
@@ -65,7 +65,7 @@
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import moment from 'moment-timezone';
-
+import LoadingSpinner from './LoadingSpinner'
 const showDatePicker = ref(false);
 const titre = ref('');
 const description = ref('');
@@ -75,7 +75,7 @@ const statusGet= ref(true);
 const statusPost = ref(true);
 const statusDelete = ref(true);
 const erreur = ref(null);
-
+const isLoading = ref(true);
 axios.defaults.baseURL = process.env.VUE_APP_API_URL;
 
 const afficherCalendrier = () => {
@@ -97,6 +97,7 @@ try{
   }
   finally{
       statusGet.value = false;
+      isLoading.value = false;
   }
 }
 onMounted(async() =>{
@@ -155,4 +156,10 @@ const deleteData = async(index) => {
   .v-menu__content {
     z-index: 3000 !important;
   }
+  .spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 </style>
